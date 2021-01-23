@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: docker-dot-net.app
+    build:
+      context: ./config/docker/dotnet
+    volumes:
+      - "./src:/src"
+    depends_on: 
+      - mysql
+    working_dir: /src/App
+    command: ["dotnet", "watch", "run"]
+    restart: always
+  
+  mysql:
+    container_name: docker-dot-net.mysql
+    image: mysql:5
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    command: ["--log_error_verbosity=2"]
+    restart: always
+
+volumes:
+  dotnet-bin:
+  dotnet-obj:
